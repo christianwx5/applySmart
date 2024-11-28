@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  apply_smart:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+    networks:
+      - laravel-network
+
+  AS-DB:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: admin123
+      MYSQL_DATABASE: apply_smart
+      MYSQL_USER: admin_applySmart
+      MYSQL_PASSWORD: admin123
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - laravel-network
+
+networks:
+  laravel-network:
+    driver: bridge
+
+volumes:
+  db_data:
