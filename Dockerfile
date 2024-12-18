@@ -1,12 +1,13 @@
 FROM php:7.4-apache
 
-# Instala las extensiones necesarias de PHP
+# Instala las extensiones necesarias de PHP y el cliente MySQL
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
     zip \
     unzip \
+    default-mysql-client \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd \
     && docker-php-ext-install pdo_mysql
