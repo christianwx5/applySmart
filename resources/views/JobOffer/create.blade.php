@@ -190,16 +190,12 @@
                   @endif
                 </div>
               </div>
-              <!-- <div class="col-sm-4">
-                <div class="form-group">
-                  <label for="last_name" class="morado">Telefono:</label>
-                </div>
-              </div> -->
+
             </div>
             <div class="row">
               <div class="col-12 text-center">
                 <div class="form-group">
-                  <button id="addJobOffer" class="btn btn-primary"> Añadir </button>
+                  <button id="addJobOffer" class="btn btn-primary"> {{ isset($JobOffer) ? 'Actualizar' : 'Añadir' }}  </button>
                 </div>
               </div>
             </div>

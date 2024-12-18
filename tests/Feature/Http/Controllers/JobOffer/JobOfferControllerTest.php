@@ -62,4 +62,51 @@ class JobOfferControllerTest extends TestCase
         $response->assertSee('value="' . $jobOffer->description . '"', false);
     }
 
+    public function testJobOfferUpdate()
+    {
+        // Crear una oferta de trabajo ficticia en la base de datos
+        $jobOffer = factory(JobOffer::class)->create([
+            'title' => 'Desarrollador Backend',
+            'description' => 'Trabajo en el desarrollo de aplicaciones backend',
+            'Company' => 'Tech Corp',
+            'idApplyStatus' => 1,
+            'idPriority' => 2
+        ]);
+    
+        // Nuevos datos para actualizar
+        $updatedData = [
+            'title' => 'Desarrollador Frontend',
+            'description' => 'Trabajo en el desarrollo de interfaces frontend',
+            'Company' => 'Innovatech',
+            'idApplyStatus' => 2,
+            'idPriority' => 1
+        ];
+    
+        // Realizar una solicitud PUT a la página de actualización de la oferta de trabajo
+        $response = $this->put(route('JobOffers.update', $jobOffer->id), $updatedData);
+    
+        // Verificar que la respuesta redirige correctamente
+        $response->assertRedirect(route('JobOffers.index'));
+    
+        // Verificar que los datos se hayan actualizado en la base de datos
+        $this->assertDatabaseHas('job_offers', [
+            'id' => $jobOffer->id,
+            'title' => 'Desarrollador Frontend',
+            'description' => 'Trabajo en el desarrollo de interfaces frontend',
+            'Company' => 'Innovatech',
+            'idApplyStatus' => 2,
+            'idPriority' => 1
+        ]);
+    
+        // Verificar que no existen los antiguos datos en la base de datos
+        $this->assertDatabaseMissing('job_offers', [
+            'id' => $jobOffer->id,
+            'title' => 'Desarrollador Backend',
+            'description' => 'Trabajo en el desarrollo de aplicaciones backend',
+            'Company' => 'Tech Corp',
+            'idApplyStatus' => 1,
+            'idPriority' => 2
+        ]);
+    }    
+
 }

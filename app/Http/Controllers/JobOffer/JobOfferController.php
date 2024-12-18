@@ -66,10 +66,10 @@ class JobOfferController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\JobOffert  $jobOffert
+     * @param  \App\JobOffert  $JobOffer
      * @return \Illuminate\Http\Response
      */
-    public function show(JobOffer $jobOffer)
+    public function show(JobOffer $JobOffer)
     {
         
     }
@@ -77,7 +77,7 @@ class JobOfferController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\JobOffert  $jobOffert
+     * @param  \App\JobOffert  $JobOffer
      * @return \Illuminate\Http\Response
      */
     public function edit(JobOffer $JobOffer) {
@@ -90,23 +90,23 @@ class JobOfferController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\JobOffert  $jobOffert
+     * @param  \App\JobOffert  $JobOffer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, JobOffer $jobOffer) { 
+    public function update(Request $request, JobOffer $JobOffer) { 
         // Validar y actualizar los datos 
-        $validatedData = $request->validate([ 'title' => 'required|string|max:30', 'description' => 'required|string', 'Company' => 'required|string|max:50', 'idApplyStatus' => 'required|int', 'idPriority' => 'required|int', ]); 
-        $jobOffer->update($validatedData);
-         return redirect()->route('JobOffers.index')->with('success', 'Job offer updated successfully!'); 
+        $validatedData = $request->validate([ 'title' => 'required|string|max:30', 'description' => 'required|string', 'Company' => 'required|string|max:50', 'idApplyStatus' => 'required|int', 'idPriority' => 'required|int' ]); 
+        $JobOffer->update($validatedData);
+        return redirect()->route('JobOffers.index')->with('success', 'Job offer updated successfully!'); 
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\JobOffert  $jobOffert
+     * @param  \App\JobOffert  $JobOffer
      * @return \Illuminate\Http\Response
      */
-    public function destroy(JobOffer $jobOffert)
+    public function destroy(JobOffer $JobOffer)
     {
         //
     }
