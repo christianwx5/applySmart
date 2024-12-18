@@ -26,6 +26,14 @@ Route::get('/JobOffer/list', function () {
     return view('JobOffer/list');
 });
 
+
+// Definir la ruta personalizada para inactivar
+Route::patch('JobOffers/{JobOffer}/inactivate', 'JobOffer\JobOfferController@inactivate')->name('JobOffers.inactivate');
+
+// Definir la ruta personalizada para activar
+Route::patch('JobOffers/{JobOffer}/activate', 'JobOffer\JobOfferController@activate')->name('JobOffers.activate');
+
+// Rustas de acciones RESTful estándar
 Route::resource('JobOffers', 'JobOffer\JobOfferController');
     // ->middleware('auth')
     // ->except('show');

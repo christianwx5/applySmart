@@ -110,4 +110,21 @@ class JobOfferController extends Controller
     {
         //
     }
+
+    public function inactivate(JobOffer $JobOffer)
+    {
+        // Lógica para inactivar la oferta de trabajo
+        $JobOffer->update(['status' => 'inactive']); // Suponiendo que tienes un campo 'status'
+        
+        return redirect()->route('JobOffers.index')->with('success', 'Job offer inactivated successfully!');
+    }
+
+    public function activate(JobOffer $JobOffer)
+    {
+        // Lógica para activar la oferta de trabajo
+        $JobOffer->update(['status' => 'active']); // Suponiendo que tienes un campo 'status'
+
+        return redirect()->route('JobOffers.index')->with('success', 'Job offer activated successfully!');
+    }
+    
 }
