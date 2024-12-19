@@ -108,13 +108,17 @@ class JobOfferController extends Controller
      */
     public function destroy(JobOffer $JobOffer)
     {
-        //
+        $JobOffer->update(['status' => 2]); // Suponiendo que tienes un campo 'status'
+        
+        return redirect()->route('JobOffers.index')->with('success', 'Job offer deleted successfully!');
     }
 
     public function inactivate(JobOffer $JobOffer)
     {
         // Lógica para inactivar la oferta de trabajo
-        $JobOffer->update(['status' => 'inactive']); // Suponiendo que tienes un campo 'status'
+
+        // dd($JobOffer);
+        $JobOffer->update(['status' => 0]); // Suponiendo que tienes un campo 'status'
         
         return redirect()->route('JobOffers.index')->with('success', 'Job offer inactivated successfully!');
     }
@@ -122,7 +126,7 @@ class JobOfferController extends Controller
     public function activate(JobOffer $JobOffer)
     {
         // Lógica para activar la oferta de trabajo
-        $JobOffer->update(['status' => 'active']); // Suponiendo que tienes un campo 'status'
+        $JobOffer->update(['status' => 1]); // Suponiendo que tienes un campo 'status'
 
         return redirect()->route('JobOffers.index')->with('success', 'Job offer activated successfully!');
     }

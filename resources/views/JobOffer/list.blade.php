@@ -110,7 +110,29 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       padding: 20px;
     }
+
+    /*efectos de estado*/
+    .status-circle {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        border-radius: 50%;
+        text-align: center;
+        color: white;
+        font-weight: bold;
+    }
+    .status-active {
+        background-color: green;
+    }
+    .status-inactive {
+        background-color: gray;
+    }
+    .status-deleted {
+        background-color: red;
+    }
   </style>
+
   <title>ApplySmart</title>
 </head>
 
@@ -144,7 +166,19 @@
         <div class="grid-item header">EDITAR</div>
         <div class="grid-item header">ELIMINAR</div>
         @foreach ($jobOffers as $jobOffer)
-        <div class="grid-item">{{ $jobOffer->id }}</div>
+        <div class="grid-item">
+          <span class="status-circle 
+            @if($jobOffer->status == 1) 
+                status-active
+            @elseif($jobOffer->status == 0) 
+                status-inactive
+            @elseif($jobOffer->status == 2) 
+                status-deleted
+            @endif">
+              {{ $jobOffer->id }}
+          </span>
+        </div>
+
         <div class="grid-item">{{ Str::limit($jobOffer->title, 20, '...') }}</div>
         <div class="grid-item">{{ Str::limit($jobOffer->description, 20, '...') }}</div>
         <div class="grid-item">{{ $jobOffer->createdAt }}</div>
@@ -175,12 +209,13 @@
           ¿Desea eliminar o inactivar <span id="jobOfferTitle"></span>?
         </div>
         <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          
           <form id="deleteForm" method="POST">
-            @csrf
-            @method('DELETE')
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
             <button type="button" class="btn btn-warning" id="inactivateButton">Inactivar</button>
-            <button type="button" class="btn btn-success" id="activateButton">Activar</button>
+            <button type="button" class="btn btn-success" id="activateButton">Activar</button>          
+            @csrf
+            @method('DELETE') 
             <button type="submit" class="btn btn-danger">Eliminar</button>
           </form>
         </div>
@@ -190,41 +225,70 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      var deleteModal = document.getElementById('deleteModal');
-      deleteModal.addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget; // Botón que activó el modal
-        var jobId = button.getAttribute('data-id'); // Extraer la información de atributos data-*
-        var jobTitle = button.getAttribute('data-title'); // Extraer el título de jobOffer
-        var deleteForm = document.getElementById('deleteForm');
-        var inactivateButton = document.getElementById('inactivateButton');
-        var activateButton = document.getElementById('activateButton');
-        
+      console.log("DOMContentLoaded event fired");
+
+      var deleteModal = $('#deleteModal'); // Usar jQuery para seleccionar el modal
+
+      deleteModal.on('show.bs.modal', function(event) {
+        console.log("show.bs.modal event fired");
+
+        var button = $(event.relatedTarget); // Botón que activó el modal
+        var jobId = button.data('id'); // Extraer la información de atributos data-*
+        var jobTitle = button.data('title'); // Extraer el título de jobOffer
+        var deleteForm = $('#deleteForm'); // Usar jQuery para seleccionar el formulario
+        var inactivateButton = $('#inactivateButton');
+        var activateButton = $('#activateButton');
+
         // Actualizar el contenido del modal con el título de jobOffer
-        document.getElementById('jobOfferTitle').textContent = jobTitle;
+        $('#jobOfferTitle').text(jobTitle);
 
         // Actualizar la acción del formulario de eliminación
-        var deleteAction = '{{ route('JobOffers.destroy', ':id') }}';
+        var deleteAction = "{{ route('JobOffers.destroy', ':id') }}";
         deleteAction = deleteAction.replace(':id', jobId);
-        deleteForm.setAttribute('action', deleteAction);
+        deleteForm.attr('action', deleteAction);
 
         // Configurar la acción del botón de inactivación
-        var inactivateAction = '{{ route('JobOffers.inactivate', ':id') }}'; // Ajustar con la ruta correcta de inactivación
+        var inactivateAction = "{{ route('JobOffers.inactivate', ':id') }}";
         inactivateAction = inactivateAction.replace(':id', jobId);
-        inactivateButton.onclick = function() {
-          deleteForm.setAttribute('action', inactivateAction);
+        inactivateButton.off('click').on('click', function() {
+          console.log("inactivateButton clicked");
+
+          deleteForm.attr('action', inactivateAction);
+          deleteForm.attr('method', 'POST');
+          $('<input>').attr({
+            type: 'hidden',
+            name: '_method',
+            value: 'PATCH'
+          }).appendTo(deleteForm);
           deleteForm.submit();
-        };
+        });
 
         // Configurar la acción del botón de activación
-        var activateAction = '{{ route('JobOffers.activate', ':id') }}'; // Ajustar con la ruta correcta de activación
+        var activateAction = "{{ route('JobOffers.activate', ':id') }}";
         activateAction = activateAction.replace(':id', jobId);
-        activateButton.onclick = function() {
-          deleteForm.setAttribute('action', activateAction);
+        activateButton.off('click').on('click', function() {
+          console.log("activateButton clicked");
+
+          deleteForm.attr('action', activateAction);
+          deleteForm.attr('method', 'POST');
+          $('<input>').attr({
+            type: 'hidden',
+            name: '_method',
+            value: 'PATCH'
+          }).appendTo(deleteForm);
           deleteForm.submit();
-        };
+        });
+
+        // Configurar la acción del botón de eliminación
+        deleteForm.off('submit').on('submit', function() {
+          console.log("deleteForm submitted");
+          deleteForm.attr('method', 'POST');
+        });
       });
     });
   </script>
+
+
 
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>

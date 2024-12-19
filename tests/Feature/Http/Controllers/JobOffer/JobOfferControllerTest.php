@@ -109,4 +109,73 @@ class JobOfferControllerTest extends TestCase
         ]);
     }    
 
+    public function testJobOfferInactivation()
+    {
+        // Crear una oferta de trabajo ficticia en la base de datos
+        $jobOffer = factory(JobOffer::class)->create([
+            'status' => 1 // Estado inicial activo (1)
+        ]);
+
+        // Realizar una solicitud PATCH a la ruta de inactivación
+        $response = $this->patch(route('JobOffers.inactivate', $jobOffer->id));
+
+        // Verificar que la respuesta redirige correctamente
+        $response->assertRedirect(route('JobOffers.index'));
+
+        // Verificar que los datos se hayan actualizado en la base de datos
+        $this->assertDatabaseHas('job_offers', [
+            'id' => $jobOffer->id,
+            'status' => 0 // Estado inactivo (0)
+        ]);
+
+        // Verificar que el mensaje de éxito está en la sesión
+        $response->assertSessionHas('success', 'Job offer inactivated successfully!');
+    }
+
+    public function testJobOfferActivation()
+    {
+        // Crear una oferta de trabajo ficticia en la base de datos
+        $jobOffer = factory(JobOffer::class)->create([
+            'status' => 0 // Estado inicial inactivo (0)
+        ]);
+
+        // Realizar una solicitud PATCH a la ruta de activación
+        $response = $this->patch(route('JobOffers.activate', $jobOffer->id));
+
+        // Verificar que la respuesta redirige correctamente
+        $response->assertRedirect(route('JobOffers.index'));
+
+        // Verificar que los datos se hayan actualizado en la base de datos
+        $this->assertDatabaseHas('job_offers', [
+            'id' => $jobOffer->id,
+            'status' => 1 // Estado activo (1)
+        ]);
+
+        // Verificar que el mensaje de éxito está en la sesión
+        $response->assertSessionHas('success', 'Job offer activated successfully!');
+    }
+
+    public function testJobOfferDelete()
+    {
+        // Crear una oferta de trabajo ficticia en la base de datos
+        $jobOffer = factory(JobOffer::class)->create([
+            'status' => 1 // Estado inicial inactivo (0)
+        ]);
+
+        // Realizar una solicitud PATCH a la ruta de activación
+        $response = $this->delete(route('JobOffers.destroy', $jobOffer->id));
+
+        // Verificar que la respuesta redirige correctamente
+        $response->assertRedirect(route('JobOffers.index'));
+
+        // Verificar que los datos se hayan actualizado en la base de datos
+        $this->assertDatabaseHas('job_offers', [
+            'id' => $jobOffer->id,
+            'status' => 2 // Estado activo (1)
+        ]);
+
+        // Verificar que el mensaje de éxito está en la sesión
+        $response->assertSessionHas('success', 'Job offer deleted successfully!');
+    }
+
 }

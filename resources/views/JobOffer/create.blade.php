@@ -214,7 +214,7 @@
             </button>
           </div>
           <div class="modal-body">
-            Se sobrepaso el límite de licencias registrada, el máximo es de, favor contáctese con su gestor.
+            content
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>

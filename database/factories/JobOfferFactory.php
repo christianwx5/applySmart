@@ -23,6 +23,7 @@ $factory->define(JobOffer::class, function (Faker $faker) {
         'description' => $faker->sentence,
         'createdAt' => now(),
         'Company' => $faker->company,
+        'idCompany' => $faker->numberBetween(1, 100),
         'idApplyStatus' => $faker->numberBetween(1, 10),
         'idPriority' => $faker->numberBetween(1, 2)
     ];
