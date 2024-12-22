@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers\JobOffer;
 
 use App\JobOffer;
+use App\Company;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -27,9 +28,20 @@ class JobOfferControllerTest extends TestCase
         $response->assertViewIs('JobOffer.create');
     }
 
-    public function testJobOfferCreate() {
-        // Crear datos de prueba usando el factory
-        $jobOfferData = factory(JobOffer::class)->make()->toArray();
+    public function testJobOfferCreate()
+    {
+        // $user = User::factory()->create();
+        // $this->actingAs($user);
+
+        // Crear datos de prueba usando el factory sin guardar en la base de datos
+        $company = factory(Company::class)->create();
+        $jobOfferData = factory(JobOffer::class)->make([
+            'idCompany' => $company->id,
+        ])->toArray();
+
+        // dd($jobOfferData);
+        // Eliminar el campo innecesario
+        unset($jobOfferData['Company']);
 
         // Simula una solicitud POST a la ruta store
         $response = $this->post('JobOffers', $jobOfferData);
@@ -37,9 +49,17 @@ class JobOfferControllerTest extends TestCase
         // Verifica que el código de respuesta sea 302 (redirección)
         $response->assertStatus(302);
 
-        // Verifica que el registro fue creado en la base de datos
-        $this->assertDatabaseHas('job_offers', $jobOfferData);
+        // Verifica que el registro fue creado en la base de datos solo con los campos necesarios
+        $this->assertDatabaseHas('job_offers', [
+            'title' => $jobOfferData['title'],
+            'description' => $jobOfferData['description'],
+            'createdAt' => $jobOfferData['createdAt'],
+            'idCompany' => $jobOfferData['idCompany'],
+            'idApplyStatus' => $jobOfferData['idApplyStatus'],
+            'idPriority' => $jobOfferData['idPriority'],
+        ]);
     }
+
 
     public function testEditJobOfferView()
     {

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -113,23 +114,26 @@
 
     /*efectos de estado*/
     .status-circle {
-        display: inline-block;
-        width: 30px;
-        height: 30px;
-        line-height: 30px;
-        border-radius: 50%;
-        text-align: center;
-        color: white;
-        font-weight: bold;
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      border-radius: 50%;
+      text-align: center;
+      color: white;
+      font-weight: bold;
     }
+
     .status-active {
-        background-color: green;
+      background-color: green;
     }
+
     .status-inactive {
-        background-color: gray;
+      background-color: gray;
     }
+
     .status-deleted {
-        background-color: red;
+      background-color: red;
     }
   </style>
 
@@ -137,7 +141,7 @@
 </head>
 
 <body>
-  <div class="container-fluid">
+  <div class="container">
     <div class="card-header">
       <div class="row">
         <div class="col-10">
@@ -168,21 +172,26 @@
         @foreach ($jobOffers as $jobOffer)
         <div class="grid-item">
           <span class="status-circle 
-            @if($jobOffer->status == 1) 
-                status-active
-            @elseif($jobOffer->status == 0) 
-                status-inactive
-            @elseif($jobOffer->status == 2) 
-                status-deleted
-            @endif">
-              {{ $jobOffer->id }}
+                    @if($jobOffer->status == 1) 
+                        status-active
+                    @elseif($jobOffer->status == 0) 
+                        status-inactive
+                    @elseif($jobOffer->status == 2) 
+                        status-deleted
+                    @endif">
+            {{ $jobOffer->id }}
           </span>
         </div>
-
         <div class="grid-item">{{ Str::limit($jobOffer->title, 20, '...') }}</div>
         <div class="grid-item">{{ Str::limit($jobOffer->description, 20, '...') }}</div>
         <div class="grid-item">{{ $jobOffer->createdAt }}</div>
-        <div class="grid-item">{{ $jobOffer->Company }}</div>
+        <div class="grid-item">
+          <select class="form-control">
+            @foreach ($companies as $company)
+            <option value="{{ $company->id }}" @if($jobOffer->idCompany == $company->id) selected @endif>{{ $company->name }}</option>
+            @endforeach
+          </select>
+        </div>
         <div class="grid-item">{{ $jobOffer->idApplyStatus }}</div>
         <div class="grid-item">{{ $jobOffer->idPriority }}</div>
         <div class="grid-item">
@@ -210,12 +219,12 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-          
+
           <form id="deleteForm" method="POST">
             <button type="button" class="btn btn-warning" id="inactivateButton">Inactivar</button>
-            <button type="button" class="btn btn-success" id="activateButton">Activar</button>          
+            <button type="button" class="btn btn-success" id="activateButton">Activar</button>
             @csrf
-            @method('DELETE') 
+            @method('DELETE')
             <button type="submit" class="btn btn-danger">Eliminar</button>
           </form>
         </div>
@@ -296,4 +305,3 @@
 </body>
 
 </html>
-

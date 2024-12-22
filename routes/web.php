@@ -37,3 +37,8 @@ Route::patch('JobOffers/{JobOffer}/activate', 'JobOffer\JobOfferController@activ
 Route::resource('JobOffers', 'JobOffer\JobOfferController');
     // ->middleware('auth')
     // ->except('show');
+
+Route::resource('companies', 'CompanyController');
+
+Route::patch('companies/{company}/activate', 'CompanyController@activate')->name('companies.activate');
+Route::patch('companies/{company}/deactivate', 'CompanyController@deactivate')->name('companies.deactivate');

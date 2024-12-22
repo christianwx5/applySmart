@@ -4,6 +4,7 @@ namespace App\Http\Controllers\JobOffer;
 
 use App\Http\Controllers\Controller;
 use App\JobOffer;
+use App\Company;
 use Illuminate\Http\Request;
 
 class JobOfferController extends Controller
@@ -16,7 +17,8 @@ class JobOfferController extends Controller
     public function index()
     {
         $jobOffers = JobOffer::latest()->get();
-        return view('JobOffer.list', compact('jobOffers'));
+        $companies = Company::all();
+        return view('JobOffer.list', compact('jobOffers', 'companies'));
     }
 
     /**
@@ -44,7 +46,7 @@ class JobOfferController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|string|max:30',
             'description' => 'required|string',
-            'Company' => 'required|string|max:50',
+            // 'Company' => 'required|string|max:50',
             'idPriority' => 'required|int',
         ]);
 
@@ -54,7 +56,8 @@ class JobOfferController extends Controller
         $jobOffer = JobOffer::create([
             'title' => $validatedData['title'],
             'description' => $validatedData['description'],
-            'Company' => $validatedData['Company'],
+            // 'Company' => $validatedData['Company'],
+            'idCompany' => $request->input('idCompany'),
             'idApplyStatus' => $request->input('idApplyStatus'),
             'idPriority' => $validatedData['idPriority'],
         ]);
@@ -100,12 +103,6 @@ class JobOfferController extends Controller
         return redirect()->route('JobOffers.index')->with('success', 'Job offer updated successfully!'); 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\JobOffert  $JobOffer
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(JobOffer $JobOffer)
     {
         $JobOffer->update(['status' => 2]); // Suponiendo que tienes un campo 'status'
