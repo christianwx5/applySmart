@@ -10,3 +10,13 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+
+#laravel ignore
+/public/storage
+/public/hot
+/public/css/*
+!/public/css/app.css
+/public/js/*
+!/public/js/app.js
+/public/mix-manifest.json
+

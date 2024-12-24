@@ -34,11 +34,15 @@ Route::patch('JobOffers/{JobOffer}/inactivate', 'JobOffer\JobOfferController@ina
 Route::patch('JobOffers/{JobOffer}/activate', 'JobOffer\JobOfferController@activate')->name('JobOffers.activate');
 
 // Rustas de acciones RESTful estándar
-Route::resource('JobOffers', 'JobOffer\JobOfferController');
-    // ->middleware('auth')
-    // ->except('show');
+Route::resource('JobOffers', 'JobOffer\JobOfferController')
+    ->middleware('auth')
+    /* ->except('index') */;
 
 Route::resource('companies', 'CompanyController');
 
 Route::patch('companies/{company}/activate', 'CompanyController@activate')->name('companies.activate');
 Route::patch('companies/{company}/deactivate', 'CompanyController@deactivate')->name('companies.deactivate');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
