@@ -5,6 +5,7 @@ namespace App\Http\Controllers\JobOffer;
 use App\Http\Controllers\Controller;
 use App\JobOffer;
 use App\Company;
+use App\JobPriority;
 use Illuminate\Http\Request;
 
 class JobOfferController extends Controller
@@ -18,7 +19,9 @@ class JobOfferController extends Controller
     {
         $jobOffers = JobOffer::latest()->get();
         $companies = Company::all();
-        return view('JobOffer.list', compact('jobOffers', 'companies'));
+        $jobPriorities = JobPriority::all();
+        
+        return view('JobOffer.list', compact('jobOffers', 'companies', 'jobPriorities'));
     }
 
     /**

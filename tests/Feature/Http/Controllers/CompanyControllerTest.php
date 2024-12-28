@@ -236,7 +236,7 @@ class CompanyControllerTest extends TestCase
     }
 
     /** @test */
-    public function company_can_be_deactivated()
+    public function company_can_be_desactivated()
     {
         // $user = User::factory()->create();
         // $this->actingAs($user);
@@ -245,7 +245,7 @@ class CompanyControllerTest extends TestCase
             'status' => 1, // Inicialmente activada
         ]);
 
-        $response = $this->patch(route('companies.deactivate', $company));
+        $response = $this->patch(route('companies.desactivate', $company));
 
         $response->assertStatus(302);
         $response->assertRedirect(route('companies.index'));

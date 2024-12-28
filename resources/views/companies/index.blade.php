@@ -61,7 +61,7 @@
           <div class="btn-group">
             <a href="{{ route('companies.edit', $company) }}" class="btn btn-primary btn-sm">Editar</a>
             @if ($company->status == 1)
-            <form action="{{ route('companies.deactivate', $company) }}" method="POST" style="display:inline-block;">
+            <form action="{{ route('companies.desactivate', $company) }}" method="POST" style="display:inline-block;">
               @csrf
               @method('PATCH')
               <button type="submit" class="btn btn-warning btn-sm">Desactivar</button>

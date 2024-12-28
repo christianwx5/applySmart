@@ -41,8 +41,19 @@ Route::resource('JobOffers', 'JobOffer\JobOfferController')
 Route::resource('companies', 'CompanyController');
 
 Route::patch('companies/{company}/activate', 'CompanyController@activate')->name('companies.activate');
-Route::patch('companies/{company}/deactivate', 'CompanyController@deactivate')->name('companies.deactivate');
+Route::patch('companies/{company}/desactivate', 'CompanyController@desactivate')->name('companies.desactivate');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+Route::resource('companies', 'CompanyController');
+
+
+use App\Http\Controllers\JobPriorityController;
+
+Route::resource('jobPriorities', 'JobPriorityController');
+
+Route::patch('jobPriorities/{jobPriority}/activate', 'JobPriorityController@activate')->name('jobPriorities.activate');
+Route::patch('jobPriorities/{jobPriority}/desactivate', 'JobPriorityController@desactivate')->name('jobPriorities.desactivate');

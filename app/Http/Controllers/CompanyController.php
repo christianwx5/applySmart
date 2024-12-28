@@ -84,7 +84,7 @@ class CompanyController extends Controller
         return redirect()->route('companies.index')->with('success', 'Empresa activada exitosamente');
     }
     
-    public function deactivate(Company $company)
+    public function desactivate(Company $company)
     {
         $company->update(['status' => 0]);
         return redirect()->route('companies.index')->with('success', 'Empresa desactivada exitosamente');

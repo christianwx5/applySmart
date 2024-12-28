@@ -1,5 +1,6 @@
 <?php
 
+use App\JobPriority;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,6 +15,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CompanySeeder::class,
             UserSeeder::class,
+            JobPrioritySeeder::class
             //Otros seeders
         ]);
 

@@ -18,6 +18,10 @@
     }
   </style>
 
+@php
+  $applyStatuses = ['Deseos', 'A postular', 'Postulado', 'Contactado', '1era entrevista', 'Tecn entrevista', 'Tecn prueba', 'Sipco entrevista', 'Sipco prueba', 'Final entrevista', 'Contratado', 'Rechazado', 'Anulado', 'Postorgado' ,'No contactado']
+@endphp
+
   <div class="container">
     <div class="card-header">
       <div class="row">
@@ -69,8 +73,21 @@
             @endforeach
           </select>
         </div>
-        <div class="grid-item">{{ $jobOffer->idApplyStatus }}</div>
-        <div class="grid-item">{{ $jobOffer->idPriority }}</div>
+        <div class="grid-item">
+          <select class="form-control">
+            @foreach ($applyStatuses as $index => $applyStatus)
+              <option value="{{ $index }}" @if($jobOffer->idApplyStatus == $index) selected @endif>{{ $applyStatus }}</option>
+            @endforeach
+            {{ $jobOffer->idApplyStatus }}
+          </select>
+        </div>
+        <div class="grid-item">
+          <select class="form-control">
+            @foreach ($jobPriorities as $priority)
+              <option value="{{ $priority->id }}" @if($jobOffer->idPriority == $priority->id) selected @endif>{{ $priority->name }}</option>
+            @endforeach
+          </select>
+        </div>
         <div class="grid-item">
           <a href="{{ route('JobOffers.edit', $jobOffer) }}" class="btn btn-primary btn-sm">Editar</a>
         </div>
