@@ -18,6 +18,11 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <!-- Vue y axios -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.26"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.23.0"></script>
+
 </head>
 <body>
     <div id="app">

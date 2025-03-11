@@ -15,6 +15,12 @@ class JobOfferController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function list()
+    {
+        $jobOffers = JobOffer::latest()->get();
+        return response()->json($jobOffers);
+    }
+
     public function index()
     {
         $jobOffers = JobOffer::latest()->get();

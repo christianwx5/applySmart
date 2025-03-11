@@ -1,5 +1,3 @@
-
-
 @extends('layouts.app')
 
 @section('content')
@@ -22,6 +20,9 @@
   $applyStatuses = ['Deseos', 'A postular', 'Postulado', 'Contactado', '1era entrevista', 'Tecn entrevista', 'Tecn prueba', 'Sipco entrevista', 'Sipco prueba', 'Final entrevista', 'Contratado', 'Rechazado', 'Anulado', 'Postorgado' ,'No contactado']
 @endphp
 
+<script src="https://cdn.jsdelivr.net/npm/vue@3.2.26"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@0.23.0"></script>
+
   <div class="container">
     <div class="card-header">
       <div class="row">
@@ -40,61 +41,57 @@
           </a>
         </div>
       </div>
-      <div class="grid-container">
-        <div class="grid-item header">ID</div>
+      <div id="app" class="grid-container">
+        <!-- <div class="grid-item header">ID</div> -->
         <div class="grid-item header">TITLE</div>
         <div class="grid-item header">DESCRIPCION</div>
-        <div class="grid-item header">CREATED AT</div>
+        <!-- <div class="grid-item header">CREATED AT</div> -->
         <div class="grid-item header">COMPANY</div>
         <div class="grid-item header">APPLY STATUS</div>
-        <div class="grid-item header">PRIORITY</div>
+        <!-- <div class="grid-item header">PRIORITY</div> -->
         <div class="grid-item header">EDITAR</div>
         <div class="grid-item header">ELIMINAR</div>
-        @foreach ($jobOffers as $jobOffer)
-        <div class="grid-item">
-          <span class="status-circle 
-                    @if($jobOffer->status == 1) 
-                        status-active
-                    @elseif($jobOffer->status == 0) 
-                        status-inactive
-                    @elseif($jobOffer->status == 2) 
-                        status-deleted
-                    @endif">
-            {{ $jobOffer->id }}
+        <template v-for="jobOffer in apiData">
+        <!-- <div class="grid-item">
+          <span class="status-circle" :class="{
+              'status-active': jobOffer.status == 1,
+              'status-inactive': jobOffer.status == 0,
+              'status-deleted': jobOffer.status == 2
+            }">
+            @{{ jobOffer.id }}
           </span>
-        </div>
-        <div class="grid-item">{{ Str::limit($jobOffer->title, 20, '...') }}</div>
-        <div class="grid-item">{{ Str::limit($jobOffer->description, 20, '...') }}</div>
-        <div class="grid-item">{{ $jobOffer->createdAt }}</div>
+        </div> -->
+        <div class="grid-item">@{{ jobOffer.title }}</div>
+        <div class="grid-item">@{{ jobOffer.description }}</div>
+        <!-- <div class="grid-item">@{{ jobOffer.createdAt }}</div> -->
         <div class="grid-item">
           <select class="form-control">
-            @foreach ($companies as $company)
-            <option value="{{ $company->id }}" @if($jobOffer->idCompany == $company->id) selected @endif>{{ $company->name }}</option>
-            @endforeach
+            <option v-for="company in companies" :value="company.id" :selected="jobOffer.idCompany == company.id">
+              @{{ company.name }}
+            </option>
           </select>
         </div>
         <div class="grid-item">
           <select class="form-control">
-            @foreach ($applyStatuses as $index => $applyStatus)
-              <option value="{{ $index }}" @if($jobOffer->idApplyStatus == $index) selected @endif>{{ $applyStatus }}</option>
-            @endforeach
-            {{ $jobOffer->idApplyStatus }}
+            <option v-for="(applyStatus, index) in applyStatuses" :value="index" :selected="jobOffer.idApplyStatus == index">
+              @{{ applyStatus }}
+            </option>
           </select>
         </div>
-        <div class="grid-item">
+        <!-- <div class="grid-item">
           <select class="form-control">
-            @foreach ($jobPriorities as $priority)
-              <option value="{{ $priority->id }}" @if($jobOffer->idPriority == $priority->id) selected @endif>{{ $priority->name }}</option>
-            @endforeach
+            <option v-for="priority in jobPriorities" :value="priority.id" :selected="jobOffer.idPriority == priority.id">
+              @{{ priority.name }}
+            </option>
           </select>
+        </div> -->
+        <div class="grid-item">
+          <a :href="`/JobOffers/${jobOffer.id}/edit`" class="btn btn-primary btn-sm">Editar</a>
         </div>
         <div class="grid-item">
-          <a href="{{ route('JobOffers.edit', $jobOffer) }}" class="btn btn-primary btn-sm">Editar</a>
+          <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal" :data-id="jobOffer.id" :data-title="jobOffer.title">Eliminar</button>
         </div>
-        <div class="grid-item">
-          <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal" data-id="{{ $jobOffer->id }}" data-title="{{ $jobOffer->title }}">Eliminar</button>
-        </div>
-        @endforeach
+        </template>
       </div>
     </div>
   </div>
@@ -189,9 +186,34 @@
         });
       });
     });
+
+    const App = Vue.createApp({
+        data() {
+            return {
+                apiData: [],
+                companies: @json($companies), // Asegúrate de pasar las compañías y prioridades desde el backend
+                jobPriorities: @json($jobPriorities),
+                applyStatuses: @json($applyStatuses)
+            };
+        },
+        mounted() {
+            this.fetchData();
+        },
+        methods: {
+            async fetchData() {
+                try {
+                    const response = await axios.get('/JobOffers/list');
+                    this.apiData = response.data;
+                    console.log(this.apiData);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            },
+        },
+    });
+    const vm = App.mount('#app');
+    console.log(vm);
   </script>
-
-
 
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
