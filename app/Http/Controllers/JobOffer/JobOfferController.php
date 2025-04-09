@@ -7,6 +7,8 @@ use App\JobOffer;
 use App\Company;
 use App\JobPriority;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+
 
 class JobOfferController extends Controller
 {
@@ -26,8 +28,8 @@ class JobOfferController extends Controller
         $jobOffers = JobOffer::latest()->get();
         $companies = Company::all();
         $jobPriorities = JobPriority::all();
-        
-        return view('JobOffer.list', compact('jobOffers', 'companies', 'jobPriorities'));
+
+        return view('JobOffer.draggableList', compact('jobOffers', 'companies', 'jobPriorities'));
     }
 
     /**
@@ -48,9 +50,9 @@ class JobOfferController extends Controller
      */
     public function store(Request $request)
     {
-       // dd($request->all());
+        // dd($request->all());
         //print_r($request->input('idApplyStatus'), false);
-        
+
         // Validar los datos de entrada
         $validatedData = $request->validate([
             'title' => 'required|string|max:30',
@@ -81,10 +83,7 @@ class JobOfferController extends Controller
      * @param  \App\JobOffert  $JobOffer
      * @return \Illuminate\Http\Response
      */
-    public function show(JobOffer $JobOffer)
-    {
-        
-    }
+    public function show(JobOffer $JobOffer) {}
 
     /**
      * Show the form for editing the specified resource.
@@ -92,11 +91,12 @@ class JobOfferController extends Controller
      * @param  \App\JobOffert  $JobOffer
      * @return \Illuminate\Http\Response
      */
-    public function edit(JobOffer $JobOffer) {
+    public function edit(JobOffer $JobOffer)
+    {
 
-         // dd($JobOffer);
+        // dd($JobOffer);
         return view('JobOffer.create', compact('JobOffer'));
-    }     
+    }
 
     /**
      * Update the specified resource in storage.
@@ -105,17 +105,46 @@ class JobOfferController extends Controller
      * @param  \App\JobOffert  $JobOffer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, JobOffer $JobOffer) { 
+    public function update(Request $request, JobOffer $JobOffer)
+    {
         // Validar y actualizar los datos 
-        $validatedData = $request->validate([ 'title' => 'required|string|max:30', 'description' => 'required|string', 'Company' => 'required|string|max:50', 'idApplyStatus' => 'required|int', 'idPriority' => 'required|int' ]); 
+        $validatedData = $request->validate(['title' => 'required|string|max:30', 'description' => 'required|string', 'Company' => 'required|string|max:50', 'idApplyStatus' => 'required|int', 'idPriority' => 'required|int']);
         $JobOffer->update($validatedData);
-        return redirect()->route('JobOffers.index')->with('success', 'Job offer updated successfully!'); 
+        return redirect()->route('JobOffers.index')->with('success', 'Job offer updated successfully!');
     }
+
+
+    public function updateJobOfferApplyStatus(Request $request)
+    {
+        Log::emergency('Esto es un mensaje informativo.');
+        Log::emergency('Esto es un mensaje informativo 2.');
+        Log::emergency('Contenido de la solicitud:', $request->all());
+        // Validar los datos recibidos
+        $validatedData = $request->validate([
+          //  'idJobOffers'       => 'required|integer|exists:job_offers,id',
+          'idJobOffers'       => 'required|integer',
+            'newIdApplyStatus'  => 'required|integer'
+        ]);
+
+        Log::emergency('Esto es un mensaje informativo 3.');
+
+        // Buscar el JobOffer por ID
+        $jobOffer = JobOffer::findOrFail($validatedData['idJobOffers']);
+        Log::emergency('Esto es un mensaje informativo 4.');
+        // Actualizar solo el campo idApplyStatus con el nuevo valor recibido
+        $jobOffer->idApplyStatus = $validatedData['newIdApplyStatus'];
+        Log::emergency('Esto es un mensaje informativo 5.');
+        $jobOffer->save();
+        Log::emergency('Esto es un mensaje informativo 6.');
+        // Retornar una respuesta JSON indicando el éxito de la operación
+        return response()->json(['success' => 'Job offer updated successfully!'], 200);
+    }
+
 
     public function destroy(JobOffer $JobOffer)
     {
         $JobOffer->update(['status' => 2]); // Suponiendo que tienes un campo 'status'
-        
+
         return redirect()->route('JobOffers.index')->with('success', 'Job offer deleted successfully!');
     }
 
@@ -125,7 +154,7 @@ class JobOfferController extends Controller
 
         // dd($JobOffer);
         $JobOffer->update(['status' => 0]); // Suponiendo que tienes un campo 'status'
-        
+
         return redirect()->route('JobOffers.index')->with('success', 'Job offer inactivated successfully!');
     }
 
@@ -136,5 +165,4 @@ class JobOfferController extends Controller
 
         return redirect()->route('JobOffers.index')->with('success', 'Job offer activated successfully!');
     }
-    
 }

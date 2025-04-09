@@ -33,6 +33,9 @@ Route::patch('JobOffers/{JobOffer}/inactivate', 'JobOffer\JobOfferController@ina
 // Definir la ruta personalizada para activar
 Route::patch('JobOffers/{JobOffer}/activate', 'JobOffer\JobOfferController@activate')->name('JobOffers.activate');
 
+Route::patch('JobOffers/updateJobOfferApplyStatus', 'JobOffer\JobOfferController@updateJobOfferApplyStatus')->name('JobOffers.updateJobOfferApplyStatus');
+
+
 Route::get('JobOffers/list', 'JobOffer\JobOfferController@list')->name('JobOffers.list');
 
 // Rustas de acciones RESTful estándar
@@ -64,6 +67,11 @@ Route::patch('jobPriorities/{jobPriority}/desactivate', 'JobPriorityController@d
 Route::get('testViews/test-api', function () {
     return view('testViews/test-api');
 });
+
 Route::get('testViews/test-api-adaptado', function () {
     return view('testViews/test-api-adaptado');
+});
+
+Route::get('testViews/test-draggable', function () {
+    return view('testViews/test-draggable');
 });

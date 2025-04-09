@@ -41,7 +41,7 @@
           </a>
         </div>
       </div>
-      <div id="app" class="grid-container">
+      <div id="appVue" class="grid-container">
         <!-- <div class="grid-item header">ID</div> -->
         <div class="grid-item header">TITLE</div>
         <div class="grid-item header">DESCRIPCION</div>
@@ -211,7 +211,7 @@
             },
         },
     });
-    const vm = App.mount('#app');
+    const vm = App.mount('#appVue');
     console.log(vm);
   </script>
 
